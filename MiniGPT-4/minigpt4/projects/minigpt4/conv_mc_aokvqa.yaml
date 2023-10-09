@@ -1,0 +1,78 @@
+ # Copyright (c) 2022, salesforce.com, inc.
+ # All rights reserved.
+ # SPDX-License-Identifier: BSD-3-Clause
+ # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+
+# Overall Accuracy is: 63.13
+# Per Answer Type Accuracy is the following:
+# other : 52.90
+# yes/no : 84.28
+# number : 41.01
+
+model:
+  arch: mini_gpt4
+  model_type: pretrain_vicuna0
+  end_sym: "###"
+  max_txt_len: 256
+  ckpt: '.cache/hub/models--minigpt4--vicuna-7b/pretrained_minigpt4_vicuna_7b.pth'
+  use_grad_checkpoint: False
+  # prompt_template: "Based on the image, answer the question.\nQuestion: {}"
+  answer_refinement_prompt: " Assistant: {}\n###Human: So which option is your final answer, A. {}, B. {}, C. {}, or D.{}?"
+  prompt_template: "### Human: <Img><ImageHere></Img>### Human: Based on the image, select the correct answer to the question from the options. You MUST mention option labels, i.e., 'A.', 'B.', 'C.' or 'D.' in your response. Explain your answer.\nQuestion: {}\nOptions: A. {}, B. {}, C. {}, D. {}"
+  process_answer: True
+  answer_processor: 'vqa'
+  conversation: True
+  multiple_choice: True
+
+  keyword_pipeline: True
+  reason: True
+  paraphrase: False
+
+  perform_selection: False
+  selection_criterion: 'Aconf'
+  perform_ensembling: False
+
+  ext_paraphrase: False
+  par_num_beams: 5
+  num_add_candidates: 4
+  verbose: True
+  alt_device: 0
+
+datasets:
+  aok_vqa: # name of the dataset builder
+    type: eval
+    vis_processor:
+        eval:
+          name: "blip2_image_eval"
+          image_size: 224
+    text_processor:
+        eval:
+          name: "blip_question"
+    build_info:
+        images:
+            storage: '.cache/lavis/coco/images/'
+
+run:
+  task: mc_aok_vqa
+  # optimization-specific
+  batch_size_train: 16
+  batch_size_eval: 16
+  num_workers: 4
+
+  # inference-specific
+  max_len: 40
+  min_len: 1
+  num_beams: 5
+  inference_method: "generate"
+  
+  seed: 42
+  output_dir: "output/Vicuna7B/AOK-VQA"
+
+  evaluate: True
+  test_splits: ["val"]
+
+  # distribution-specific
+  device: "cuda"
+  world_size: 1
+  dist_url: "env://"
+  distributed: True
