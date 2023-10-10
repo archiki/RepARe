@@ -1,6 +1,6 @@
 # Rephrase, Augment, Reason: Visual Grounding of Questions for Vision-Language Models
 * Authors: [Archiki Prasad](https://archiki.github.io), [Elias Stengel-Eskin](https://esteng.github.io/), and [Mohit Bansal](https://www.cs.unc.edu/~mbansal/) (UNC Chapel Hill)
-* [Paper](https://archiki.github.io/files/RepARe.pdf)
+* [Paper](http://arxiv.org/abs/2310.05861)
 * **Note:** This is preliminary version of our code. The complete code to run all experiments in the paper will be added shortly.
 
 <img src="./assets/intro.png" alt="teaser image" width="5000"/>
@@ -57,7 +57,7 @@ Please cite our paper if you use our code in your works:
   year          = {2023},
   archivePrefix = {arXiv},
   primaryClass  = {cs.CL},
+  eprint        = {2310.05861}
 }
 ```
-<!-- eprint        = {2310.xxxxx} -->
 
